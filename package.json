@@ -5,7 +5,6 @@
   "main": "bot.js",
   "author": "Tturna",
   "dependencies": {
-    "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
     "discord.js": "^14.11.0",
     "dotenv": "^16.3.1",
     "winston": "^3.3.3"

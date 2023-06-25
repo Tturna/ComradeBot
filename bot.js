@@ -1,63 +1,54 @@
-const fs = require('node:fs'); // native node filesystem module
-const path = require('node:path'); // native node path utility module
-const { Client, Events, GatewayIntentBits, Collection } = require('discord.js');
+const { Client, Events, GatewayIntentBits } = require('discord.js');
+const { setupCommands, handleSlashCommands } = require('./commands.js');
+const { handlePinkChee, isChee } = require('./pinkchee.js');
 require('dotenv').config();
 
 // intents define what kind of data is sent to the bot,
 // so it effectively defines the bot's functionality.
 const client = new Client({
     intents: [
-        GatewayIntentBits.Guilds
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildPresences
     ]
 });
 
-// Collection extends the JS Map
-client.commands = new Collection();
-
-const commandsPath = path.join(__dirname, 'commands');
-// readdirSync gets an array of files in a directory
-const commandFiles = fs.readdirSync(commandsPath).filter(f => f.endsWith('.js'));
-
-commandFiles.map(cf => {
-    const cfPath = path.join(commandsPath, cf);
-    const command = require(cfPath);
-
-    if (!('data' in command) || !('execute' in command)) {
-        console.log(`[WARNING] The command at ${cfPath} is missing a required "data" or "execute" property.`);
-        return;
-    }
-
-    client.commands.set(command.data.name, command)
-});
+setupCommands(client);
 
 client.once(Events.ClientReady, c => {
     console.log(`Ready! Logged in as ${c.user.tag}`);
+
+    client.guilds.fetch(process.env.GUILD_ID)
+    .then(guild => {
+        console.log(`Guild=${guild}:${guild.id}`);
+        handlePinkChee(guild);
+    })
+    .catch(e => {
+        console.log(e);
+    });
 });
 
 // Listen for interactions
 // Return if not slash command interaction
 client.on(Events.InteractionCreate, async interaction => {
-    if (!interaction.isChatInputCommand()) return;
-    console.log(interaction);
+    handleSlashCommands(interaction);
+});
 
-    const command = interaction.client.commands.get(interaction.commandName);
-
-    if (!command) {
-        console.error(`No command matching ${interaction.commandName} was found.`);
-        return;
-    }
-    
-    try {
-        await command.execute(interaction);
-    } catch (error) {
-        console.error(error);
-
-        if (interaction.replied || interaction.deferred) {
-			await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
-		} else {
-			await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-		}
-    }
+client.on(Events.PresenceUpdate, (oldPresence, newPresence) => {
+    // console.log(`Presence updated for user: ${newPresence.member.user.username}`);
+    // console.log(`Presence changed: ${oldPresence.status} -> ${newPresence.status}`);
+    // console.log(`Guild: ${newPresence.guild.name}`);
+    isChee(newPresence.guild, newPresence.member)
+    .then(userIsChee => {
+        // console.log(`User ${newPresence.member.user.username} checked against Chee.`);
+        if (userIsChee) {
+            // console.log("handle pink chee");
+            handlePinkChee(newPresence.guild);
+            console.log(`Chee presence changed from ${oldPresence.status} to ${newPresence.status}.`);
+        }
+    })
+    .catch(e => {
+        console.log(e);
+    });
 });
 
 client.login(process.env.AUTH_TOKEN);
