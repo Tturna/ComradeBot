@@ -10,7 +10,8 @@ const HIDDEN_CHANNEL_ID = "985125620440768592";
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
-        GatewayIntentBits.GuildPresences
+        GatewayIntentBits.GuildPresences,
+        GatewayIntentBits.GuildMessages
     ]
 });
 
@@ -28,7 +29,6 @@ client.once(Events.ClientReady, c => {
         // Render from timing out the bot.
         guild.channels.fetch(HIDDEN_CHANNEL_ID)
         .then(hiddenChannel => {
-            console.log(hiddenChannel.isTextBased());
             hiddenChannel.send(`Startup. ${new Date()}`);
         })
         .catch(e => {
@@ -48,7 +48,7 @@ client.on(Events.InteractionCreate, async interaction => {
 
 client.on(Events.PresenceUpdate, (oldPresence, newPresence) => {
     console.log(`Presence updated for user: ${newPresence.member.user.username}`);
-    console.log(`Presence changed: ${oldPresence.status} -> ${newPresence.status}`);
+    console.log(`Presence changed: ${oldPresence ? oldPresence.status : 'null'} -> ${newPresence.status}`);
     console.log(`Guild: ${newPresence.guild.name}`);
     isChee(newPresence.guild, newPresence.member)
     .then(userIsChee => {
@@ -68,6 +68,7 @@ client.on(Events.MessageCreate, message => {
 
     // Handle periodic log messages
     // This is an experiment to see if this prevents Render's hosting timeout.
+    console.log(`${message.member.user.username} sent a message.`);
     if (message.channelId != HIDDEN_CHANNEL_ID) return;
     if (message.member.id != process.env.APP_ID) return;
     console.log('Received own message in hidden channel. Sending update in 10 minutes.')
