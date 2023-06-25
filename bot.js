@@ -3,6 +3,8 @@ const { setupCommands, handleSlashCommands } = require('./commands.js');
 const { handlePinkChee, isChee } = require('./pinkchee.js');
 require('dotenv').config();
 
+const HIDDEN_CHANNEL_ID = "985125620440768592";
+
 // intents define what kind of data is sent to the bot,
 // so it effectively defines the bot's functionality.
 const client = new Client({
@@ -21,6 +23,17 @@ client.once(Events.ClientReady, c => {
     .then(guild => {
         console.log(`Guild=${guild}:${guild.id}`);
         handlePinkChee(guild);
+
+        // Start sending messages every 10 minutes to hopefully prevent
+        // Render from timing out the bot.
+        guild.channels.fetch(HIDDEN_CHANNEL_ID)
+        .then(hiddenChannel => {
+            console.log(hiddenChannel.isTextBased());
+            hiddenChannel.send(`Startup. ${new Date()}`);
+        })
+        .catch(e => {
+            console.log(e);
+        });
     })
     .catch(e => {
         console.log(e);
@@ -49,6 +62,20 @@ client.on(Events.PresenceUpdate, (oldPresence, newPresence) => {
     .catch(e => {
         console.log(e);
     });
+});
+
+client.on(Events.MessageCreate, message => {
+
+    // Handle periodic log messages
+    // This is an experiment to see if this prevents Render's hosting timeout.
+    if (message.channelId != HIDDEN_CHANNEL_ID) return;
+    if (message.member.id != process.env.APP_ID) return;
+    console.log('Received own message in hidden channel. Sending update in 10 minutes.')
+
+    // 10 minute delay
+    setTimeout(() => {
+        message.channel.send(`Periodic log message ${new Date()}`);
+    }, 600_000);
 });
 
 client.login(process.env.AUTH_TOKEN);

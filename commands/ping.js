@@ -10,6 +10,7 @@ module.exports = {
         .setDescription('Replies with Pong!'),
 
     async execute(interaction) {
+        console.log('ping!');
         await interaction.reply('Pong!');
     }
 }
