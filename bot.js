@@ -34,9 +34,9 @@ client.on(Events.InteractionCreate, async interaction => {
 });
 
 client.on(Events.PresenceUpdate, (oldPresence, newPresence) => {
-    // console.log(`Presence updated for user: ${newPresence.member.user.username}`);
-    // console.log(`Presence changed: ${oldPresence.status} -> ${newPresence.status}`);
-    // console.log(`Guild: ${newPresence.guild.name}`);
+    console.log(`Presence updated for user: ${newPresence.member.user.username}`);
+    console.log(`Presence changed: ${oldPresence.status} -> ${newPresence.status}`);
+    console.log(`Guild: ${newPresence.guild.name}`);
     isChee(newPresence.guild, newPresence.member)
     .then(userIsChee => {
         // console.log(`User ${newPresence.member.user.username} checked against Chee.`);
