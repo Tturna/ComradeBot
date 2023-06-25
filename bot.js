@@ -1,9 +1,12 @@
 const { Client, Events, GatewayIntentBits } = require('discord.js');
 const { setupCommands, handleSlashCommands } = require('./commands.js');
 const { handlePinkChee, isChee } = require('./pinkchee.js');
+const express = require('express');
 require('dotenv').config();
 
 const HIDDEN_CHANNEL_ID = "985125620440768592";
+
+const webapp = express();
 
 // intents define what kind of data is sent to the bot,
 // so it effectively defines the bot's functionality.
@@ -77,6 +80,15 @@ client.on(Events.MessageCreate, message => {
     setTimeout(() => {
         message.channel.send(`Periodic log message ${new Date()}`);
     }, 600_000);
+});
+
+// web
+webapp.get('https://comradebot.onrender.com/', (req, res) => {
+    res.send('privet');
+});
+
+webapp.listen(443, () => {
+    console.log('web server running on 443');
 });
 
 client.login(process.env.AUTH_TOKEN);
