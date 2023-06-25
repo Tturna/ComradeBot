@@ -83,7 +83,7 @@ client.on(Events.MessageCreate, message => {
 });
 
 // web
-webapp.get('https://comradebot.onrender.com/', (req, res) => {
+webapp.get('/', (req, res) => {
     res.send('privet');
 });
 
