@@ -1,6 +1,7 @@
 const { Client, Events, GatewayIntentBits } = require('discord.js');
 const { setupCommands, handleSlashCommands } = require('./commands.js');
 const { handlePinkChee, isChee } = require('./pinkchee.js');
+const { initDb } = require('./db.js');
 const express = require('express');
 require('dotenv').config();
 
@@ -8,7 +9,7 @@ const webapp = express();
 
 // intents define what kind of data is sent to the bot,
 // so it effectively defines the bot's functionality.
-const client = new Client({
+const dcClient = new Client({
     intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildPresences,
@@ -16,15 +17,18 @@ const client = new Client({
     ]
 });
 
-setupCommands(client);
+setupCommands(dcClient);
 
-client.once(Events.ClientReady, c => {
+dcClient.once(Events.ClientReady, c => {
     console.log(`Ready! Logged in as ${c.user.tag}`);
 
-    client.guilds.fetch(process.env.GUILD_ID)
+    dcClient.guilds.fetch(process.env.GUILD_ID)
     .then(guild => {
         console.log(`Guild=${guild}:${guild.id}`);
         handlePinkChee(guild);
+
+        console.log("Init db");
+        initDb();
     })
     .catch(e => {
         console.log(e);
@@ -32,11 +36,11 @@ client.once(Events.ClientReady, c => {
 });
 
 // Listen for interactions
-client.on(Events.InteractionCreate, async interaction => {
+dcClient.on(Events.InteractionCreate, async interaction => {
     handleSlashCommands(interaction);
 });
 
-client.on(Events.PresenceUpdate, (oldPresence, newPresence) => {
+dcClient.on(Events.PresenceUpdate, (oldPresence, newPresence) => {
     console.log(`${newPresence.member.user.username}: ${oldPresence ? oldPresence.status : 'null'} -> ${newPresence.status}`);
     console.log(`Guild: ${newPresence.guild.name}`);
     isChee(newPresence.guild, newPresence.member)
@@ -59,4 +63,4 @@ webapp.listen(443, () => {
     console.log('web server running on 443');
 });
 
-client.login(process.env.AUTH_TOKEN);
+dcClient.login(process.env.AUTH_TOKEN);
