@@ -54,5 +54,26 @@ module.exports = {
         .catch(e => {
             console.log(e);
         });
+    },
+
+    pinkChance: () => {
+        let pinkChanceProduct = 6/7;
+        console.log("Pink Forecast---------------------");
+        for (let i = 0; i<7; i++) {
+            const nyDate = DateTime.now().setZone('America/New_York').minus({ days: 6-i });
+            const date = parseInt(nyDate.toISO().split('T')[0].replace(/-/g, ''));
+            const rng = mulberry32(date);
+            const shouldBePink = rng < 1/7;
+
+            console.log(`${date}: ${shouldBePink}`);
+            
+            pinkChanceProduct *= shouldBePink ? 1/7 : 6/7;
+
+            console.log(`product: ${pinkChanceProduct}`);
+        }
+
+        const chance = Math.round((1 - pinkChanceProduct) * 10000) / 100;
+        console.log(`${chance}% chance for pink tomorrow.`);
+        return chance;
     }
 }
