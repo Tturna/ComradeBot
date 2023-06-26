@@ -7,11 +7,9 @@ const CHEEID = "535483016546615302";
 module.exports = {
     isChee: (guild, member) => {
         return new Promise((resolve, reject) => {
-            // console.log("Finding chee...");
             guild.members.fetch(CHEEID)
             .then(found => {
             const result = member.id == found.id;
-            // console.log(`Queried user ${member.user.username} is chee: ${result}`);
             resolve(result);
             })
             .catch(e => {

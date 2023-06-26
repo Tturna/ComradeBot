@@ -4,8 +4,6 @@ const { handlePinkChee, isChee } = require('./pinkchee.js');
 const express = require('express');
 require('dotenv').config();
 
-const HIDDEN_CHANNEL_ID = "985125620440768592";
-
 const webapp = express();
 
 // intents define what kind of data is sent to the bot,
@@ -34,22 +32,17 @@ client.once(Events.ClientReady, c => {
 });
 
 // Listen for interactions
-// Return if not slash command interaction
 client.on(Events.InteractionCreate, async interaction => {
     handleSlashCommands(interaction);
 });
 
 client.on(Events.PresenceUpdate, (oldPresence, newPresence) => {
-    console.log(`Presence updated for user: ${newPresence.member.user.username}`);
-    console.log(`Presence changed: ${oldPresence ? oldPresence.status : 'null'} -> ${newPresence.status}`);
+    console.log(`${newPresence.member.user.username}: ${oldPresence ? oldPresence.status : 'null'} -> ${newPresence.status}`);
     console.log(`Guild: ${newPresence.guild.name}`);
     isChee(newPresence.guild, newPresence.member)
     .then(userIsChee => {
-        // console.log(`User ${newPresence.member.user.username} checked against Chee.`);
         if (userIsChee) {
-            // console.log("handle pink chee");
             handlePinkChee(newPresence.guild);
-            console.log(`Chee presence changed from ${oldPresence.status} to ${newPresence.status}.`);
         }
     })
     .catch(e => {
