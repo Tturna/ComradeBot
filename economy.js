@@ -43,11 +43,11 @@ module.exports = {
                     console.log(`Periodic income for ${nameString}`);
                     let income = 5;
 
-                    const lastDailyBonusTime = data.lastDailyBonusTime ? data.lastDailyBonusTime : 0;
+                    const lastDailyBonusVariable = data.lastDailyBonus ? data.lastDailyBonus : 0;
 
-                    if (nowUnix - lastDailyBonusTime > 22*60*60) {
-                        console.log(`Daily income for ${nameString}. Time since last: ${nowUnix - lastDailyBonusTime}`);
-                        console.log(`nowUnix: ${nowUnix}, lastTime: ${lastDailyBonusTime}`);
+                    if (nowUnix - lastDailyBonusVariable > 22*60*60) {
+                        console.log(`Daily income for ${nameString}. Time since last: ${nowUnix - lastDailyBonusVariable}`);
+                        console.log(`nowUnix: ${nowUnix}, lastTime: ${lastDailyBonusVariable}`);
                         income += 100;
                     }
 
