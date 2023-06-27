@@ -20,7 +20,8 @@ module.exports = {
         // console.log(`secondsdiff: ${secondsDiff}`);
         if (secondsDiff >= 1200) {
             console.log(`Resetting activity for ${nameString}. 20min passed or income received.`);
-            data = await UserModel.findOneAndUpdate({ username: nameString }, { activeBonusStartTime: 0, hMsgCount: 0 });
+            await UserModel.updateOne({ username: nameString }, { activeBonusStartTime: 0, hMsgCount: 1 });
+            return;
         }
 
         if (data.hMsgCount >= 10) return;
@@ -30,7 +31,7 @@ module.exports = {
             if ((data.hMsgCount < 5 && secondsDiff < 600) ||
                 (data.hMsgCount >= 5 && secondsDiff >= 600)
             ){
-                await UserModel.findOneAndUpdate({ username: nameString }, { hMsgCount: data.hMsgCount + 1 });
+                await UserModel.updateOne({ username: nameString }, { hMsgCount: data.hMsgCount + 1 });
                 // console.log(`Increasing activity for ${nameString}: ${data.hMsgCount + 1}`);
 
                 if (data.hMsgCount + 1 >= 10) {
