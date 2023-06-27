@@ -47,7 +47,7 @@ module.exports = {
                         balance: data.balance + income,
                         activeBonusStartTime: 0,
                         hMsgCount: 0,
-                        lastDailyBonusTime: nowUnix
+                        lastDailyBonus: nowUnix
                     });
                 }
             } else if (data.hMsgCount < 5 && secondsDiff >= 1800) {
