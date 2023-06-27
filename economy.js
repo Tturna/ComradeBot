@@ -12,9 +12,14 @@ module.exports = {
             console.log(`Unknown user sent a message. Adding entry for ${nameString}`);
             data = await addUser(nameString);
         }
-        // console.log(data);
+        console.log(data);
 
-        const startTime = data.activeBonusStartTime ? data.activeBonusStartTime : 0;
+        let startTime = nowUnix;
+        if (!data.activeBonusStartTime) {
+
+            startTime = data.activeBonusStartTime ? data.activeBonusStartTime : nowUnix;
+            console.log(`No activeBonusStartTime found for ${nameString}`);
+        }
         const secondsDiff = nowUnix - startTime;
 
         // console.log(`secondsdiff: ${secondsDiff}`);
@@ -42,6 +47,7 @@ module.exports = {
 
                     if (nowUnix - lastDailyBonusTime > 22*60*60) {
                         console.log(`Daily income for ${nameString}. Time since last: ${nowUnix - lastDailyBonusTime}`);
+                        console.log(`nowUnix: ${nowUnix}, lastTime: ${lastDailyBonusTime}`);
                         income += 100;
                     }
 
@@ -58,8 +64,8 @@ module.exports = {
                 await UserModel.updateOne({ username: nameString }, { activeBonusStartTime: 0, hMsgCount: 0 });
             }
         } else {
-            console.log(`Started activity count for ${nameString}: 1`);
-            await UserModel.updateOne({ username: nameString }, { activeBonusStartTime: DateTime.now().toUnixInteger(), hMsgCount: 1});
+            console.log(`Started activity count for ${nameString}`);
+            await UserModel.updateOne({ username: nameString }, { activeBonusStartTime: nowUnix, hMsgCount: 1});
         }
     }
 }
