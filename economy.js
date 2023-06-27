@@ -14,16 +14,16 @@ module.exports = {
         }
         console.log(data);
 
-        let startTime = nowUnix;
-        if (!data.activeBonusStartTime) {
-
-            startTime = data.activeBonusStartTime ? data.activeBonusStartTime : nowUnix;
+        let startTime = 0;
+        if (data.activeBonusStartTime) {
+            startTime = data.activeBonusStartTime;
+        } else {
             console.log(`No activeBonusStartTime found for ${nameString}`);
         }
         const secondsDiff = nowUnix - startTime;
 
         // console.log(`secondsdiff: ${secondsDiff}`);
-        if (secondsDiff >= 1200) {
+        if (startTime > 0 && secondsDiff >= 1200) {
             console.log(`Resetting activity for ${nameString}. 20min passed or income received.`);
             await UserModel.updateOne({ username: nameString }, { activeBonusStartTime: 0, hMsgCount: 1 });
             return;
