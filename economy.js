@@ -16,10 +16,9 @@ module.exports = {
         const startTime = data.activeBonusStartTime ? data.activeBonusStartTime : 0;
         const secondsDiff = DateTime.now().toUnixInteger() - startTime;
 
-        console.log(`starttime: ${startTime}`);
         console.log(`secondsdiff: ${secondsDiff}`);
-        console.log(`hMsgCount: ${data.hMsgCount}`);
         if (secondsDiff >= 3600) {
+            console.log(`Resetting activity for ${nameString}. 60min passed.`);
             data = await UserModel.findOneAndUpdate({ username: nameString }, { activeBonusStartTime: 0, hMsgCount: 0 });
         }
 
@@ -30,9 +29,9 @@ module.exports = {
             if ((data.hMsgCount < 5 && secondsDiff < 1800) ||
                 (data.hMsgCount >= 5 && secondsDiff >= 1800)
             ){
-                const newData = await UserModel.findOneAndUpdate({ username: nameString }, { hMsgCount: data.hMsgCount + 1 });
-                console.log(`Increasing activity for ${nameString}: ${newData.hMsgCount}`);
-                if (newData.hMsgCount >= 10) {
+                await UserModel.findOneAndUpdate({ username: nameString }, { hMsgCount: data.hMsgCount + 1 });
+                console.log(`Increasing activity for ${nameString}: ${data.hMsgCount + 1}`);
+                if (data.hMsgCount + 1 >= 10) {
                     // hourly income
                     console.log(`Hourly income for ${nameString}`);
                     await UserModel.updateOne({ username: nameString }, { balance: data.balance + 10, activeBonusStartTime: 0, hMsgCount: 0 });
@@ -41,6 +40,7 @@ module.exports = {
                 }
             } else if (data.hMsgCount < 5 && secondsDiff >= 1800) {
                 // not active enough during 30 minutes
+                console.log(`resetting activity data for ${nameString}`);
                 await UserModel.updateOne({ username: nameString }, { activeBonusStartTime: 0, hMsgCount: 0 });
             }
         } else {
