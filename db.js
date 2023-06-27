@@ -52,7 +52,9 @@ module.exports = {
     addUser: (usernameString) => {
         const newUser = new UserModel({
             username: usernameString,
-            balance: 0
+            balance: 0,
+            activityBonusStartTime: 0,
+            hMsgCount: 0
         });
 
         return newUser.save();
@@ -64,9 +66,8 @@ module.exports = {
         return user !== null;
     },
 
-    getUserBalance: async (usernameString) => {
-        const data = await UserModel.findOne({ username: usernameString }, 'balance');
-        console.log(`${usernameString} balance: ${data.balance}`);
-        return data.balance;
+    getUserData: async (usernameString, returnValues) => {
+        const data = await UserModel.findOne({ username: usernameString }, returnValues);
+        return data;
     }
 }

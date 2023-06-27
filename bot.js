@@ -2,6 +2,7 @@ const { Client, Events, GatewayIntentBits } = require('discord.js');
 const { setupCommands, handleSlashCommands } = require('./commands.js');
 const { handlePinkChee, isChee } = require('./pinkchee.js');
 const { initDb } = require('./db.js');
+const { handleActivityIncome } = require('./economy.js');
 const express = require('express');
 require('dotenv').config();
 
@@ -52,6 +53,10 @@ dcClient.on(Events.PresenceUpdate, (oldPresence, newPresence) => {
     .catch(e => {
         console.log(e);
     });
+});
+
+dcClient.on(Events.MessageCreate, message => {
+    handleActivityIncome(message);
 });
 
 // web

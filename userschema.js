@@ -9,6 +9,14 @@ const userSchema = new Schema({
     balance: {
         type: Number,
         required: true
+    },
+    activeBonusStartTime: {
+        type: Number,
+        required: false
+    },
+    hMsgCount: {
+        type: Number,
+        required: false
     }
 }, { timestamps: true });
 

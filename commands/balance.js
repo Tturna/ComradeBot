@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { addUser, userExists, getUserBalance } = require('../db.js');
+const { addUser, userExists, getUserData } = require('../db.js');
 
 // use the node module.exports thing so we can require these elsewhere.
 // to use ES modules instead, we'd have to mark this app as a module(?)
@@ -19,7 +19,7 @@ module.exports = {
             return;
         }
 
-        const balance = await getUserBalance(username);
-        await interaction.reply(`You have ${balance} bitches`);
+        const data = await getUserData(username, 'balance');
+        await interaction.reply(`You have ${data.balance} bitches`);
     }
 }
