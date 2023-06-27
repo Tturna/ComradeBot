@@ -31,7 +31,7 @@ module.exports = {
                 (data.hMsgCount >= 5 && secondsDiff >= 600)
             ){
                 await UserModel.findOneAndUpdate({ username: nameString }, { hMsgCount: data.hMsgCount + 1 });
-                console.log(`Increasing activity for ${nameString}: ${data.hMsgCount + 1}`);
+                // console.log(`Increasing activity for ${nameString}: ${data.hMsgCount + 1}`);
 
                 if (data.hMsgCount + 1 >= 10) {
                     console.log(`Periodic income for ${nameString}`);
@@ -50,9 +50,9 @@ module.exports = {
                         lastDailyBonus: nowUnix
                     });
                 }
-            } else if (data.hMsgCount < 5 && secondsDiff >= 1800) {
+            } else if (data.hMsgCount < 5 && secondsDiff >= 600) {
                 // not active enough during 30 minutes
-                console.log(`Resetting activity data for ${nameString}. Less than 5 messages in 30min.`);
+                console.log(`Resetting activity data for ${nameString}. Less than 5 messages in 10min.`);
                 await UserModel.updateOne({ username: nameString }, { activeBonusStartTime: 0, hMsgCount: 0 });
             }
         } else {
