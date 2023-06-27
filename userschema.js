@@ -17,6 +17,10 @@ const userSchema = new Schema({
     hMsgCount: {
         type: Number,
         required: false
+    },
+    lastDailyBonus: {
+        type: Number,
+        required: false
     }
 }, { timestamps: true });
 

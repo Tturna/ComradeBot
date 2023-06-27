@@ -20,6 +20,6 @@ module.exports = {
         }
 
         const data = await getUserData(username, 'balance');
-        await interaction.reply(`You have ${data.balance} bitches`);
+        await interaction.reply({ content: `You have ${data.balance} bitches`, ephemeral: true });
     }
 }

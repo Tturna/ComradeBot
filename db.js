@@ -54,7 +54,8 @@ module.exports = {
             username: usernameString,
             balance: 0,
             activityBonusStartTime: 0,
-            hMsgCount: 0
+            hMsgCount: 0,
+            lastDailyBonus: 0
         });
 
         return newUser.save();
