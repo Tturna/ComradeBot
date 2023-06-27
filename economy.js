@@ -39,7 +39,7 @@ module.exports = {
 
                     const lastDailyBonusTime = data.lastDailyBonusTime ? data.lastDailyBonusTime : 0;
 
-                    if (nowUnix - lastDailyBonusTime > 22*60) {
+                    if (nowUnix - lastDailyBonusTime > 22*60*60) {
                         income += 100;
                     }
 
