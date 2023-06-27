@@ -39,7 +39,7 @@ module.exports = {
 
                     // daily income
                 }
-            } else {
+            } else if (data.hMsgCount < 5 && secondsDiff >= 1800) {
                 // not active enough during 30 minutes
                 await UserModel.updateOne({ username: nameString }, { activeBonusStartTime: 0, hMsgCount: 0 });
             }
