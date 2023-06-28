@@ -8,18 +8,27 @@ const { addUser, userExists, getUserData } = require('../db.js');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('balance')
-        .setDescription('Shows your balance.'),
+        .setDescription('Shows your balance.')
+        .addBooleanOption(option =>
+            option.setName('hidden')
+                .setDescription('Hides your balance')),
 
     async execute(interaction) {
         const username = interaction.member.user.username;
         if (!(await userExists(username))) {
             await addUser(username);
             console.log(`Added user ${username} to DB`);
-            await interaction.reply(`You have 0 bitches`);
+            await interaction.reply({
+                content: `You have 0 Bits ★`,
+                ephemeral: interaction.options.getBoolean('hidden')
+            });
             return;
         }
 
         const data = await getUserData(username, 'balance');
-        await interaction.reply({ content: `You have ${data.balance} Bits ★`, ephemeral: true });
+        await interaction.reply({
+            content: `You have ${data.balance} Bits ★`,
+            ephemeral: interaction.options.getBoolean('hidden')
+        });
     }
 }

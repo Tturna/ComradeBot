@@ -1,9 +1,15 @@
 const { updateBalance } = require('./economy.js');
 const { getUserData } = require('./db.js');
 
-const red = ':red_square:';
-const yel = ':yellow_square:';
-const gre = ':green_square:';
+const red = ':red_circle:';
+const yel = ':yellow_circle:';
+const gre = ':green_circle:';
+const rrr = ':red_square:';
+const yyy = ':yellow_square:';
+const ggg = ':green_square:';
+const blk = ':black_large_square:';
+const str = ':star:';
+const arw = ':arrow_down:';
 const wheelShifts = 20;
 const finalShifts = 3;
 const finalShiftMul = 3;
@@ -16,6 +22,7 @@ module.exports = {
         const betAmount = interaction.options.getInteger('betamount');
         const betColor = interaction.options.getString('betcolor');
         const data = await getUserData(usernameString, 'balance');
+        const headerMsg = `Bet ${betAmount} on ${betColor}\n`;
 
         console.log(`bet: ${betAmount}, balance: ${data.balance}`);
         if (betAmount > data.balance) {
@@ -33,8 +40,8 @@ module.exports = {
 
         let wheel = Array(11).fill().map(() => getRandomColor());
         await interaction.editReply({
-            content: `|${wheel.join(' ')}|`,
-            ephemeral: !(interaction.options.getBoolean('public'))
+            content: `${headerMsg}|${wheel.join('')}|`,
+            ephemeral: interaction.options.getBoolean('hidden')
         });
 
         let msgContent = '';
@@ -45,8 +52,7 @@ module.exports = {
                 const left = wheel.slice(0, 5);
                 const right = wheel.slice(6);
                 const mid = wheel[5];
-                msgContent = `|${left.join(' ')}|${mid}|${right.join(' ')}|`;
-
+                
                 let interval = shiftInterval * (i + 1);
                 if (i >= wheelShifts) {
                     let n = i - wheelShifts;
@@ -55,7 +61,8 @@ module.exports = {
                 }                
                 
                 setTimeout(async () => {
-                    interaction.editReply(`|${left.join(' ')}|${mid}|${right.join(' ')}|`);
+                    msgContent = `${headerMsg}|${left.join('')}|${mid}|${right.join('')}|`;
+                    interaction.editReply(msgContent);
                 }, interval);
             }
         }, 1000);
@@ -84,7 +91,7 @@ module.exports = {
 
             await interaction.editReply({
                 content: msgContent + '\n' + msg,
-                ephemeral: !(interaction.options.getBoolean('public'))
+                ephemeral: interaction.options.getBoolean('hidden')
             });
 
             console.log(`usernameString: ${typeof(usernameString)}, result: ${typeof(result)}`);

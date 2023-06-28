@@ -26,11 +26,11 @@ module.exports = {
                 ))
 
         .addBooleanOption(option =>
-            option.setName('public')
-                .setDescription('Show this publicly?')),
+            option.setName('hidden')
+                .setDescription('Hide your game?')),
 
     async execute(interaction) {
-        await interaction.deferReply({ ephemeral: !(interaction.options.getBoolean('public'))});
+        await interaction.deferReply({ ephemeral: interaction.options.getBoolean('hidden')});
         roulette(interaction);
     }
 }
