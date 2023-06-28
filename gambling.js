@@ -22,7 +22,7 @@ module.exports = {
         const betAmount = interaction.options.getInteger('betamount');
         const betColor = interaction.options.getString('betcolor');
         const data = await getUserData(usernameString, 'balance');
-        const headerMsg = `Bet ${betAmount} on ${betColor}\n`;
+        const headerMsg = `${blk}${blk}${blk}${blk}${blk}${blk}${arw}${blk}${gre}\`${betAmount} Bits ★\`\n`;
 
         console.log(`bet: ${betAmount}, balance: ${data.balance}`);
         if (betAmount > data.balance) {
@@ -40,7 +40,7 @@ module.exports = {
 
         let wheel = Array(11).fill().map(() => getRandomColor());
         await interaction.editReply({
-            content: `${headerMsg}|${wheel.join('')}|`,
+            content: `${headerMsg}${blk}${wheel.join('')}${blk}`,
             ephemeral: interaction.options.getBoolean('hidden')
         });
 
@@ -61,7 +61,7 @@ module.exports = {
                 }                
                 
                 setTimeout(async () => {
-                    msgContent = `${headerMsg}|${left.join('')}|${mid}|${right.join('')}|`;
+                    msgContent = `${headerMsg}${blk}${left.join('')}${mid}${right.join('')}${blk}`;
                     interaction.editReply(msgContent);
                 }, interval);
             }

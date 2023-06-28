@@ -76,6 +76,15 @@ module.exports = {
     giveBits: async (interaction) => {
         const sourceUsername = interaction.member.user.username;
         const targetUsername = interaction.options.getMentionable('targetuser').user.username;
+        
+        if (sourceUsername == targetUsername) {
+            await interaction.reply({
+                content: `You can't give money to yourself.`,
+                ephemeral: true
+            });
+            return;
+        }
+
         const amount = interaction.options.getInteger('amount');
         const sourceData = await getUserData(sourceUsername, 'balance');
         const targetData = await getUserData(targetUsername, 'balance');
