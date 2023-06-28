@@ -17,6 +17,7 @@ module.exports = {
         const betColor = interaction.options.getString('betcolor');
         const data = getUserData(usernameString, 'balance');
 
+        console.log(`bet: ${betAmount}, balance: ${data.balance}`);
         if (betAmount > data.balance) {
             interaction.editReply(`You don\'t have enough bits ★ to place a bet of ${betAmount}`);
             return;
