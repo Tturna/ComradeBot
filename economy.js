@@ -12,7 +12,7 @@ module.exports = {
             console.log(`Unknown user sent a message. Adding entry for ${nameString}`);
             data = await addUser(nameString);
         }
-        console.log(data);
+        // console.log(data);
 
         let startTime = 0;
         if (data.activeBonusStartTime) {
@@ -80,12 +80,6 @@ module.exports = {
         const sourceData = await getUserData(sourceUsername, 'balance');
         const targetData = await getUserData(targetUsername, 'balance');
 
-        console.log(`source: ${sourceUsername}`);
-        console.log(`target: ${targetUsername}`);
-        console.log(`amount: ${amount}`);
-        console.log(`source balance: ${sourceData.balance}`);
-        console.log(`target balance: ${targetData.balance}`);
-
         if (amount > sourceData.balance) {
             await interaction.reply({
                 content: `You don't have that much to give.`,
@@ -98,7 +92,7 @@ module.exports = {
         await UserModel.updateOne({ username: targetUsername }, {balance: targetData.balance + amount});
 
         await interaction.reply({
-            content: `You have ${targetUsername} ${amount} bits ★`,
+            content: `You gave ${targetUsername} ${amount} bits ★`,
             ephemeral: true
         })
     }
