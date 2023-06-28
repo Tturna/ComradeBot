@@ -1,4 +1,5 @@
 const { updateBalance } = require('./economy.js');
+const { getUserData } = require('./db.js');
 
 const red = ':red_square:';
 const yel = ':yellow_square:';
@@ -11,6 +12,15 @@ const poolSize = 21;
 
 module.exports = {
     roulette: async (interaction) => {
+        const usernameString = interaction.member.user.username;
+        const betAmount = interaction.options.getInteger('betamount');
+        const betColor = interaction.options.getString('betcolor');
+        const data = getUserData(usernameString, 'balance');
+
+        if (betAmount > data.balance) {
+            interaction.editReply(`You don\'t have enough bits ★ to place a bet of ${betAmount}`);
+            return;
+        }
 
         const getRandomColor = () => {
             const rng = Math.random() * poolSize;
@@ -51,9 +61,6 @@ module.exports = {
 
         setTimeout(async () => {
             const win = wheel[5];
-            const betAmount = interaction.options.getInteger('betamount');
-            const betColor = interaction.options.getString('betcolor');
-            const usernameString = interaction.member.user.username;
 
             let result = 0;
             let msg = '';
