@@ -15,7 +15,7 @@ module.exports = {
         const usernameString = interaction.member.user.username;
         const betAmount = interaction.options.getInteger('betamount');
         const betColor = interaction.options.getString('betcolor');
-        const data = getUserData(usernameString, 'balance');
+        const data = await getUserData(usernameString, 'balance');
 
         console.log(`bet: ${betAmount}, balance: ${data.balance}`);
         if (betAmount > data.balance) {
