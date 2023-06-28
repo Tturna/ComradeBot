@@ -59,7 +59,6 @@ module.exports = {
                     });
                 }
             } else if (data.hMsgCount < 5 && secondsDiff >= 600) {
-                // not active enough during 30 minutes
                 console.log(`Resetting activity data for ${nameString}. Less than 5 messages in 10min.`);
                 await UserModel.updateOne({ username: nameString }, { activeBonusStartTime: 0, hMsgCount: 0 });
             }
@@ -67,5 +66,11 @@ module.exports = {
             console.log(`Started activity count for ${nameString}`);
             await UserModel.updateOne({ username: nameString }, { activeBonusStartTime: nowUnix, hMsgCount: 1});
         }
+    },
+
+    updateBalance: async (usernameString, amount) => {
+        const data = await getUserData(usernameString, 'balance');
+        console.log(`Data balance: ${data.balance}:${typeof(data.balance)}`);
+        await UserModel.updateOne({ username: usernameString }, { balance: data.balance + amount });
     }
 }
