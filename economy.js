@@ -70,7 +70,36 @@ module.exports = {
 
     updateBalance: async (usernameString, amount) => {
         const data = await getUserData(usernameString, 'balance');
-        console.log(`Data balance: ${data.balance}:${typeof(data.balance)}`);
         await UserModel.updateOne({ username: usernameString }, { balance: data.balance + amount });
+    },
+
+    giveBits: async (interaction) => {
+        const sourceUsername = interaction.member.user.username;
+        const targetUsername = interaction.options.getMentionable('targetuser').user.username;
+        const amount = interaction.options.getInteger('amount');
+        const sourceData = await getUserData(sourceUsername, 'balance');
+        const targetData = await getUserData(targetUsername, 'balance');
+
+        console.log(`source: ${sourceUsername}`);
+        console.log(`target: ${targetUsername}`);
+        console.log(`amount: ${amount}`);
+        console.log(`source balance: ${sourceData.balance}`);
+        console.log(`target balance: ${targetData.balance}`);
+
+        if (amount > sourceData.balance) {
+            await interaction.reply({
+                content: `You don't have that much to give.`,
+                ephemeral: true
+            });
+            return;
+        }
+
+        await UserModel.updateOne({ username: sourceUsername }, {balance: sourceData.balance - amount});
+        await UserModel.updateOne({ username: targetUsername }, {balance: targetData.balance + amount});
+
+        await interaction.reply({
+            content: `You have ${targetUsername} ${amount} bits ★`,
+            ephemeral: true
+        })
     }
 }
