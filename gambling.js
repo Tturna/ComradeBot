@@ -22,7 +22,12 @@ module.exports = {
         const betAmount = interaction.options.getInteger('betamount');
         const betColor = interaction.options.getString('betcolor');
         const data = await getUserData(usernameString, 'balance');
-        const headerMsg = `${blk}${blk}${blk}${blk}${blk}${blk}${arw}${blk}${gre}\`${betAmount} Bits ★\`\n`;
+
+        let betColorEmoji = '';
+        if (betColor == 'red') betColorEmoji = rrr;
+        else if (betColor == 'yellow') betColorEmoji = yyy;
+        else if (betColor == 'green') betColorEmoji = ggg;
+        const headerMsg = `${blk}${blk}${blk}${blk}${blk}${blk}${arw}${blk}${betColorEmoji}\`${betAmount} Bits ★\`\n`;
 
         console.log(`bet: ${betAmount}, balance: ${data.balance}`);
         if (betAmount > data.balance) {
