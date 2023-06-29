@@ -7,6 +7,7 @@ module.exports = {
     setupCommands: (client) => {
         // Collection extends the JS Map
         client.commands = new Collection();
+        client.cooldowns = new Collection();
         const commandsPath = path.join(__dirname, 'commands');
         // readdirSync gets an array of files in a directory
         const commandFiles = fs.readdirSync(commandsPath).filter(f => f.endsWith('.js'));
