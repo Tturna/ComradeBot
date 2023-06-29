@@ -22,8 +22,7 @@ const shiftInterval = 500; // ms
 
 module.exports = {
     roulette: async (interaction) => {
-
-        if (interaction.guildId != roboticsId) {
+        if (interaction.channelId != roboticsId) {
             interaction.reply({
                 content: `Roulette is only allowed in #robotics`,
                 ephemeral: true
