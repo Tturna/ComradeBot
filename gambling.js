@@ -101,17 +101,17 @@ module.exports = {
                 betColor === 'yellow' && win === yel)
             {
                 result = Math.round(betAmount * 2.5);
-                msg = `${usernameString} won ${result} ★!`;
+                msg = `${usernameString} won ${result - betAmount} ★!`;
                 console.log(msg);
             }
             else if (betColor === 'blue' && win === blu) {
                 result = Math.round(betAmount * (50 / 9));
-                msg = `${usernameString} won ${result} ★!`;
+                msg = `${usernameString} won ${result - betAmount} ★!`;
                 console.log(msg);
             }
             else if (betColor === 'green' && win === gre) {
                 result = betAmount * 50;
-                msg = `${usernameString} won ${result} ★!`;
+                msg = `${usernameString} won ${result - betAmount} ★!`;
                 console.log(msg);
             } else {
                 result = -betAmount;
