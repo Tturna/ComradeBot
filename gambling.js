@@ -67,7 +67,7 @@ module.exports = {
             ephemeral: interaction.options.getBoolean('hidden')
         });
         
-        await updateBalance({ username: usernameString }, { balance: data.balance - betAmount });
+        await updateBalance(usernameString, -betAmount);
 
         let msgContent = '';
         setTimeout(() => {
