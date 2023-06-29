@@ -43,19 +43,20 @@ module.exports = {
                     console.log(`Periodic income for ${nameString}`);
                     let income = 5;
 
-                    const lastDailyBonusVariable = data.lastDailyBonus ? data.lastDailyBonus : 0;
+                    let lastDailyBonusVariable = data.lastDailyBonus ? data.lastDailyBonus : 0;
 
                     if (nowUnix - lastDailyBonusVariable > 22*60*60) {
                         console.log(`Daily income for ${nameString}. Time since last: ${nowUnix - lastDailyBonusVariable}`);
                         console.log(`nowUnix: ${nowUnix}, lastTime: ${lastDailyBonusVariable}`);
                         income += 100;
+                        lastDailyBonusVariable = nowUnix;
                     }
 
                     await UserModel.updateOne({ username: nameString }, {
                         balance: data.balance + income,
                         activeBonusStartTime: 0,
                         hMsgCount: 0,
-                        lastDailyBonus: nowUnix
+                        lastDailyBonus: lastDailyBonusVariable
                     });
                 }
             } else if (data.hMsgCount < 5 && secondsDiff >= 600) {
