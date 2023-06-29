@@ -6,6 +6,7 @@ const { roulette } = require('../gambling.js');
 // Allegedly, to access the client instance in a command file,
 // you can use interaction.client
 module.exports = {
+    cooldown: 15,
     data: new SlashCommandBuilder()
         .setName('roulette')
         .setDescription('Play roulette')
@@ -22,6 +23,7 @@ module.exports = {
                 .addChoices(
                     { name: 'Red', value: 'red' },
                     { name: 'Yellow', value: 'yellow' },
+                    { name: 'Blue', value: 'blue' },
                     { name: 'Green', value: 'green' }
                 ))
 
@@ -30,7 +32,6 @@ module.exports = {
                 .setDescription('Hide your game?')),
 
     async execute(interaction) {
-        await interaction.deferReply({ ephemeral: interaction.options.getBoolean('hidden')});
         roulette(interaction);
     }
 }

@@ -1,6 +1,7 @@
 const fs = require('node:fs'); // native node filesystem module
 const path = require('node:path'); // native node path utility module
 const { Collection } = require('discord.js');
+const { DateTime } = require('luxon');
 
 module.exports = {
     setupCommands: (client) => {
@@ -29,6 +30,29 @@ module.exports = {
         console.log(`Slash command activated.`);
 
         const command = interaction.client.commands.get(interaction.commandName);
+
+        const { cooldowns } = client;
+        if (!cooldowns.has(command.data.name)) {
+            cooldowns.set(command.data.name, new Collection());
+        }
+
+        const now = DateTime.now().toUnixInteger();
+        const commandCooldowns = cooldowns.get(command.data.name);
+        const defaultCooldownDuration = 3;
+        const cooldownAmount = (command.cooldown ?? defaultCooldownDuration);
+
+        if (commandCooldowns.has(interaction.user.id)) {
+            const expirationTime = commandCooldowns.get(interaction.user.id) + cooldownAmount;
+
+            if (now < expirationTime) {
+                const expiredTimestamp = Math.round(expirationTime);
+                return interaction.reply({ content: `Please wait, you are on a cooldown for \`${command.data.name}\`. You can use it again <t:${expiredTimestamp}:R>.`, ephemeral: true });
+            } else {
+                commandCooldowns.delete(interaction.user.id);
+            }
+        }
+
+        commandCooldowns.set(interaction.user.id, now);
 
         if (!command) {
             console.error(`No command matching ${interaction.commandName} was found.`);
