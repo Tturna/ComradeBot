@@ -31,7 +31,7 @@ module.exports = {
 
         const command = interaction.client.commands.get(interaction.commandName);
 
-        const { cooldowns } = client;
+        const { cooldowns } = interaction.client;
         if (!cooldowns.has(command.data.name)) {
             cooldowns.set(command.data.name, new Collection());
         }
