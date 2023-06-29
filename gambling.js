@@ -100,19 +100,21 @@ module.exports = {
             if (betColor === 'red' && win === red ||
                 betColor === 'yellow' && win === yel)
             {
-                result = betAmount * 2.5;
+                result = Math.round(betAmount * 2.5);
                 msg = `${usernameString} won ${result} ★!`;
                 console.log(msg);
             }
             else if (betColor === 'blue' && win === blu) {
-                result = betAmount * (50 / 9);
+                result = Math.round(betAmount * (50 / 9));
+                msg = `${usernameString} won ${result} ★!`;
+                console.log(msg);
             }
             else if (betColor === 'green' && win === gre) {
                 result = betAmount * 50;
                 msg = `${usernameString} won ${result} ★!`;
                 console.log(msg);
             } else {
-                result = 0;
+                result = -betAmount;
                 msg = `${usernameString} lost ${-result} ★!`;
                 console.log(msg);
             }
@@ -124,7 +126,7 @@ module.exports = {
 
             console.log(`usernameString: ${typeof(usernameString)}, result: ${typeof(result)}`);
             console.log(`usernameString: ${usernameString}, result: ${result}`);
-            if (result == 0) return;
+            if (result < 0) return;
             updateBalance(usernameString, result);
 
         }, wheelShifts * shiftInterval + finalShifts * shiftInterval * finalShiftMul + 2000);
