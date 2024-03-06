@@ -31,6 +31,9 @@ dcClient.once(Events.ClientReady, async c => {
   console.log(`Guild=${guild}:${guild.id}`);
   await handlePinkChee(guild);
   initDb();
+
+  const hiddenChannel = await guild.channels.fetch('985125620440768592');
+  hiddenChannel.send('I\'m up!');
 });
 
 dcClient.on(Events.InteractionCreate, async interaction => {
