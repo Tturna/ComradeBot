@@ -1,12 +1,12 @@
 const { mongoose } = require('mongoose');
-const UserModel = require('./userschema');
+const UserModel = require('../models/userschema');
 
 const initDb = async () => {
   try {
     await mongoose.connect(process.env.MONGO_CONN_STRING, { useNewUrlParser: true, useUnifiedTopology: true });
     console.log('Database connection successful.');
   } catch (e) {
-    console.log(e);
+    console.warn(e);
   }
 };
 
@@ -33,4 +33,9 @@ const getUserData = async (usernameString, returnValues) => {
   return data;
 };
 
-module.exports = { initDb, addUser, userExists, getUserData };
+const updateUserData = async (usernameString, newValues) => {
+  const data = await UserModel.updateOne({ username: usernameString }, newValues);
+  return data;
+};
+
+module.exports = { initDb, addUser, userExists, getUserData, updateUserData };

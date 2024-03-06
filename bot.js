@@ -1,12 +1,10 @@
 const { Client, Events, GatewayIntentBits } = require('discord.js');
-const { setupCommands, handleSlashCommands } = require('./commands.js');
-const { handlePinkChee, isChee } = require('./pinkchee.js');
-const { initDb } = require('./db.js');
-const { handleActivityIncome } = require('./economy.js');
-const express = require('express');
+const { setupCommands, handleSlashCommands } = require('./handlers/commandsHandler.js');
+const { handlePinkChee, isChee } = require('./handlers/pinkcheeHandler.js');
+const { initDb } = require('./handlers/dbHandler.js');
+const { handleActivityIncome } = require('./handlers/economyHandler.js');
+const webapp = require('./webapp.js');
 require('dotenv').config();
-
-const webapp = express();
 
 // intents define what kind of data is sent to the bot,
 // so it effectively defines the bot's functionality.
@@ -51,13 +49,10 @@ dcClient.on(Events.MessageCreate, message => {
   handleActivityIncome(message);
 });
 
-// endpoint for health checks, which keep the Render instance running
-webapp.get('/', (_req, res) => {
-  res.send('privet');
-});
+const PORT = process.env.NODE_ENV === 'test' ? process.env.TEST_PORT : process.env.PORT;
 
-webapp.listen(443, () => {
-  console.log('web server running on 443');
+webapp.listen(PORT, () => {
+  console.log(`web server running on ${PORT}`);
 });
 
 dcClient.login(process.env.AUTH_TOKEN);

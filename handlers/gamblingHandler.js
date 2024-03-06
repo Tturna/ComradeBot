@@ -1,5 +1,5 @@
-const { updateBalance } = require('./economy.js');
-const { getUserData } = require('./db.js');
+const { updateBalance } = require('../handlers/economyHandler.js');
+const { getUserData } = require('../handlers/dbHandler.js');
 
 const roboticsId = '1119326839060570133';
 

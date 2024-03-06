@@ -1,4 +1,4 @@
-const { mulberry32 } = require('./customrandom.js');
+const { mulberry32 } = require('../utils/customrandom.js');
 const { DateTime } = require('luxon');
 
 const PINKROLE = '1119327148411457657';

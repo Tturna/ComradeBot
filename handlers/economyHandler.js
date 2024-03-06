@@ -1,5 +1,4 @@
-const { addUser, getUserData } = require('./db.js');
-const UserModel = require('./userschema.js');
+const { addUser, getUserData, updateUserData } = require('./dbHandler.js');
 const { DateTime } = require('luxon');
 
 // TODO: Consider if the activity bonus should be simpler
@@ -27,7 +26,7 @@ const handleActivityIncome = async (message) => {
   // Reset activity bonus after 20 minutes
   if (startTime > 0 && secondsDiff >= 1200) {
     // console.log(`Resetting activity for ${nameString}. 20min passed or income received.`);
-    await UserModel.updateOne({ username: nameString }, { activeBonusStartTime: 0, hMsgCount: 1 });
+    await updateUserData(nameString, { activeBonusStartTime: 0, hMsgCount: 1 });
     return;
   }
 
@@ -38,7 +37,7 @@ const handleActivityIncome = async (message) => {
     if ((data.hMsgCount < 5 && secondsDiff < 600) ||
       (data.hMsgCount >= 5 && secondsDiff >= 600)
     ){
-      await UserModel.updateOne({ username: nameString }, { hMsgCount: data.hMsgCount + 1 });
+      await updateUserData(nameString, { hMsgCount: data.hMsgCount + 1 });
       // console.log(`Increasing activity for ${nameString}: ${data.hMsgCount + 1}`);
 
       if (data.hMsgCount + 1 >= 10) {
@@ -54,7 +53,7 @@ const handleActivityIncome = async (message) => {
           lastDailyBonusVariable = nowUnix;
         }
 
-        await UserModel.updateOne({ username: nameString }, {
+        await updateUserData(nameString, {
           balance: data.balance + income,
           activeBonusStartTime: 0,
           hMsgCount: 0,
@@ -63,17 +62,17 @@ const handleActivityIncome = async (message) => {
       }
     } else if (data.hMsgCount < 5 && secondsDiff >= 600) {
       // console.log(`Resetting activity data for ${nameString}. Less than 5 messages in 10min.`);
-      await UserModel.updateOne({ username: nameString }, { activeBonusStartTime: 0, hMsgCount: 0 });
+      await updateUserData(nameString, { activeBonusStartTime: 0, hMsgCount: 0 });
     }
   } else {
     // console.log(`Started activity count for ${nameString}`);
-    await UserModel.updateOne({ username: nameString }, { activeBonusStartTime: nowUnix, hMsgCount: 1 });
+    await updateUserData(nameString, { activeBonusStartTime: nowUnix, hMsgCount: 1 });
   }
 };
 
 const updateBalance = async (usernameString, amount) => {
   const data = await getUserData(usernameString, 'balance');
-  await UserModel.updateOne({ username: usernameString }, { balance: data.balance + amount });
+  await updateUserData(usernameString, { balance: data.balance + amount });
 };
 
 const giveBits = async (interaction) => {
@@ -101,8 +100,8 @@ const giveBits = async (interaction) => {
 
   const targetData = await getUserData(targetUsername, 'balance');
 
-  await UserModel.updateOne({ username: sourceUsername }, { balance: sourceData.balance - amount });
-  await UserModel.updateOne({ username: targetUsername }, { balance: targetData.balance + amount });
+  await updateUserData(sourceUsername, { balance: sourceData.balance - amount });
+  await updateUserData(targetUsername, { balance: targetData.balance + amount });
 
   await interaction.reply({
     content: `You gave ${targetUsername} ${amount} bits ★`,

@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { roulette } = require('../gambling.js');
+const { roulette } = require('../handlers/gamblingHandler');
 
 // use the node module.exports thing so we can require these elsewhere.
 // to use ES modules instead, we'd have to mark this app as a module(?)
