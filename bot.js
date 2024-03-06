@@ -11,61 +11,53 @@ const webapp = express();
 // intents define what kind of data is sent to the bot,
 // so it effectively defines the bot's functionality.
 const dcClient = new Client({
-    intents: [
-        GatewayIntentBits.Guilds,
-        GatewayIntentBits.GuildPresences,
-        GatewayIntentBits.GuildMessages
-    ]
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildPresences,
+    GatewayIntentBits.GuildMessages
+  ]
 });
 
 setupCommands(dcClient);
 
-dcClient.once(Events.ClientReady, c => {
-    console.log(`Ready! Logged in as ${c.user.tag}`);
+dcClient.once(Events.ClientReady, async c => {
+  console.log(`Ready! Logged in as ${c.user.tag}`);
 
-    dcClient.guilds.fetch(process.env.GUILD_ID)
-    .then(guild => {
-        console.log(`Guild=${guild}:${guild.id}`);
-        handlePinkChee(guild);
+  const guild = await dcClient.guilds.fetch(process.env.GUILD_ID);
 
-        console.log("Init db");
-        initDb();
-    })
-    .catch(e => {
-        console.log(e);
-    });
+  if (!guild) {
+    console.error('Guild not found?!');
+    return;
+  }
+
+  console.log(`Guild=${guild}:${guild.id}`);
+  await handlePinkChee(guild);
+  initDb();
 });
 
-// Listen for interactions
 dcClient.on(Events.InteractionCreate, async interaction => {
-    handleSlashCommands(interaction);
+  handleSlashCommands(interaction);
 });
 
-dcClient.on(Events.PresenceUpdate, (oldPresence, newPresence) => {
-    console.log(`${newPresence.member.user.username}: ${oldPresence ? oldPresence.status : 'null'} -> ${newPresence.status}`);
-    console.log(`Guild: ${newPresence.guild.name}`);
-    isChee(newPresence.guild, newPresence.member)
-    .then(userIsChee => {
-        if (userIsChee) {
-            handlePinkChee(newPresence.guild);
-        }
-    })
-    .catch(e => {
-        console.log(e);
-    });
+dcClient.on(Events.PresenceUpdate, (_oldPresence, newPresence) => {
+  // console.log(`${newPresence.member.user.username}: ${oldPresence ? oldPresence.status : 'null'} -> ${newPresence.status}`);
+  // console.log(`Guild: ${newPresence.guild.name}`);
+  if(isChee(newPresence.member)) {
+    handlePinkChee(newPresence.guild);
+  }
 });
 
 dcClient.on(Events.MessageCreate, message => {
-    handleActivityIncome(message);
+  handleActivityIncome(message);
 });
 
-// web
-webapp.get('/', (req, res) => {
-    res.send('privet');
+// endpoint for health checks, which keep the Render instance running
+webapp.get('/', (_req, res) => {
+  res.send('privet');
 });
 
 webapp.listen(443, () => {
-    console.log('web server running on 443');
+  console.log('web server running on 443');
 });
 
 dcClient.login(process.env.AUTH_TOKEN);

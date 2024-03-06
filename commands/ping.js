@@ -5,12 +5,12 @@ const { SlashCommandBuilder } = require('discord.js');
 // Allegedly, to access the client instance in a command file,
 // you can use interaction.client
 module.exports = {
-    data: new SlashCommandBuilder()
-        .setName('ping')
-        .setDescription('Replies with Pong!'),
+  data: new SlashCommandBuilder()
+    .setName('ping')
+    .setDescription('Replies with Pong!'),
 
-    async execute(interaction) {
-        console.log('ping!');
-        await interaction.reply('Pong!');
-    }
-}
+  async execute(interaction) {
+    console.log('ping!');
+    await interaction.reply('Pong!');
+  }
+};

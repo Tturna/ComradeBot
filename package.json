@@ -1,9 +1,12 @@
 {
-  "name": "ComradeBot",
+  "name": "comradebot",
   "version": "0.1.0",
   "description": "ComradeBot will serve the Soviet Reunion",
   "main": "bot.js",
   "author": "Tturna",
+  "scripts": {
+    "lint": "eslint ."
+  },
   "dependencies": {
     "discord.js": "^14.11.0",
     "dotenv": "^16.3.1",
@@ -12,5 +15,8 @@
     "mongodb": "^5.6.0",
     "mongoose": "^7.3.1",
     "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0"
   }
 }

@@ -6,32 +6,32 @@ const { roulette } = require('../gambling.js');
 // Allegedly, to access the client instance in a command file,
 // you can use interaction.client
 module.exports = {
-    cooldown: 15,
-    data: new SlashCommandBuilder()
-        .setName('roulette')
-        .setDescription('Play roulette')
-        .addIntegerOption(option =>
-            option.setName('betamount')
-                .setDescription('Bet amount')
-                .setRequired(true)
-                .setMinValue(5))
+  cooldown: 15,
+  data: new SlashCommandBuilder()
+    .setName('roulette')
+    .setDescription('Play roulette')
+    .addIntegerOption(option =>
+      option.setName('betamount')
+        .setDescription('Bet amount')
+        .setRequired(true)
+        .setMinValue(5))
 
-        .addStringOption(option => 
-            option.setName('betcolor')
-                .setDescription('Which color will win?')
-                .setRequired(true)
-                .addChoices(
-                    { name: 'Red', value: 'red' },
-                    { name: 'Yellow', value: 'yellow' },
-                    { name: 'Blue', value: 'blue' },
-                    { name: 'Green', value: 'green' }
-                ))
+    .addStringOption(option =>
+      option.setName('betcolor')
+        .setDescription('Which color will win?')
+        .setRequired(true)
+        .addChoices(
+          { name: 'Red', value: 'red' },
+          { name: 'Yellow', value: 'yellow' },
+          { name: 'Blue', value: 'blue' },
+          { name: 'Green', value: 'green' }
+        ))
 
-        .addBooleanOption(option =>
-            option.setName('hidden')
-                .setDescription('Hide your game?')),
+    .addBooleanOption(option =>
+      option.setName('hidden')
+        .setDescription('Hide your game?')),
 
-    async execute(interaction) {
-        roulette(interaction);
-    }
-}
+  async execute(interaction) {
+    roulette(interaction);
+  }
+};
