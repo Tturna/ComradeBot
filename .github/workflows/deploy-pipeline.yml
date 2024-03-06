@@ -1,0 +1,64 @@
+name: Deployment Pipeline
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
+  
+  push:
+    branches: [main, feature]
+
+jobs:
+  validate-code:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install Dependencies
+        run: 'npm install'
+
+      - name: ESLint
+        run: 'npm run lint'
+
+      - name: Run Unit Tests
+        run: 'npm run test'
+  
+  update-version-and-notify:
+    # run this job only if pushing (or merging) to main
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    needs: [validate-code]
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.67.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: patch
+
+      - name: Notify Failure Discord
+        uses: rjstone/discord-webhook-notify@89b0bf43c2c8514f70d0dcba4a706b904e8a3112
+        if: failure()
+        with:
+            severity: error
+            description: |
+              # Deploy Failed!
+              **Event:** ${{ github.event_name }}
+              **Repo:** [${{ github.repository }}](https://github.com/${{ github.repository }})
+              **Job:** ${{ github.job }}
+              **Commit:** [${{ github.sha }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
+            webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+
+      - name: Notify Success Discord
+        uses: rjstone/discord-webhook-notify@89b0bf43c2c8514f70d0dcba4a706b904e8a3112
+        if: success()
+        with:
+            severity: info
+            description: |
+              # Deploy Succeeded!
+              **Repo:** [${{ github.repository }}](https://github.com/${{ github.repository }})
+            webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
