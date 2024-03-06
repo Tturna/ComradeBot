@@ -54,6 +54,7 @@ dcClient.on(Events.MessageCreate, message => {
 
 const PORT = process.env.NODE_ENV === 'test' ? process.env.TEST_PORT : process.env.PORT;
 
+// The web app only exists for health checks, which keeps the Render instance alive
 webapp.listen(PORT, () => {
   console.log(`web server running on ${PORT}`);
 });

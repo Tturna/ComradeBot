@@ -1,4 +1,7 @@
 name: Deployment Pipeline
+# This deployment pipeline is really a validation pipeline
+# because Render is checking for pushes to main and automatically
+# deploying the new versions
 
 on:
   pull_request:
@@ -25,6 +28,21 @@ jobs:
 
       - name: Run Unit Tests
         run: 'npm run test'
+
+      # This notification is here for testing purposes
+      - name: Notify Failure Discord
+        uses: rjstone/discord-webhook-notify@89b0bf43c2c8514f70d0dcba4a706b904e8a3112
+        if: failure()
+        with:
+            severity: error
+            description: |
+              # Deploy Failed!
+              <@${{ secrets.DISCORD_ADMIN_ID }}>
+              **Event:** ${{ github.event_name }}
+              **Repo:** [${{ github.repository }}](https://github.com/${{ github.repository }})
+              **Job:** ${{ github.job }}
+              **Commit:** [${{ github.sha }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
+            webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
   
   update-version-and-notify:
     # run this job only if pushing (or merging) to main
@@ -47,6 +65,7 @@ jobs:
             severity: error
             description: |
               # Deploy Failed!
+              <@${{ secrets.DISCORD_ADMIN_ID }}>
               **Event:** ${{ github.event_name }}
               **Repo:** [${{ github.repository }}](https://github.com/${{ github.repository }})
               **Job:** ${{ github.job }}
