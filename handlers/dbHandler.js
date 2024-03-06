@@ -24,7 +24,7 @@ const addUser = (usernameString) => {
 
 const userExists = async (usernameString) => {
   const user = await UserModel.findOne({ username: usernameString });
-  console.log(`User ${usernameString} exists: ${user !== null}`);
+  // console.log(`User ${usernameString} exists: ${user !== null}`);
   return user !== null;
 };
 
