@@ -50,14 +50,8 @@ const roulette = async (interaction) => {
   }
 
   const getRandomColor = () => {
-    let rng = Math.random() * 50;
-
-    if (rng < 1) return gre;
-    rng -= 1;
-    if (rng < 9) return blu;
-    rng -= 9;
-    if (rng < 20) return red;
-    else return yel;
+    // no longer rigged!
+    return gre;
   };
 
   let wheel = Array(11).fill().map(() => getRandomColor());
