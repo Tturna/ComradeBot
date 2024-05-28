@@ -87,8 +87,8 @@ const giveBits = async (interaction) => {
     return;
   }
 
-  if ((sourceUsername == 'detkewldog_' || sourceUsername == 'iamcheeseman') &&
-     (targetUsername == 'iamcheeseman') || targetUsername == 'detkewldog_') {
+  if ((sourceUsername == 'detkewldog' || sourceUsername == 'iamcheeseman') &&
+     (targetUsername == 'iamcheeseman') || targetUsername == 'detkewldog') {
     await interaction.reply({
       content: ':middle_finger: :swagnerd:',
       ephemeral: true
