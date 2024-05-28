@@ -6,16 +6,16 @@ const { groupmeme } = require('../groupmeme.js');
 // Allegedly, to access the client instance in a command file,
 // you can use interaction.client
 module.exports = {
-    data: new SlashCommandBuilder()
-        .setName('grouptest')
-        .setDescription('test')
-        .addIntegerOption(option => 
-            option.setName('betamount')
-                .setDescription('Bet Amount')
-                .setRequired(true)),
+  data: new SlashCommandBuilder()
+    .setName('grouptest')
+    .setDescription('test')
+    .addIntegerOption(option =>
+      option.setName('betamount')
+        .setDescription('Bet Amount')
+        .setRequired(true)),
 
-    async execute(interaction) {
-        if (interaction.member.user.username != 'tturna') return;
-        await groupmeme(interaction);
-    }
-}
+  async execute(interaction) {
+    if (interaction.member.user.username != 'tturna') return;
+    await groupmeme(interaction);
+  }
+};
