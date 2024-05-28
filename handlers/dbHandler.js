@@ -29,7 +29,7 @@ const userExists = async (usernameString) => {
 };
 
 const getUserData = async (usernameString, returnValues) => {
-  if (usernameString === 'detkewldog_') {
+  if (usernameString === 'detkewldog') {
     usernameString = 'iamcheeseman';
   }
 
@@ -38,7 +38,7 @@ const getUserData = async (usernameString, returnValues) => {
 };
 
 const updateUserData = async (usernameString, newValues) => {
-  if (usernameString === 'detkewldog_') {
+  if (usernameString === 'detkewldog') {
     usernameString = 'iamcheeseman';
   }
 
