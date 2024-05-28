@@ -29,11 +29,19 @@ const userExists = async (usernameString) => {
 };
 
 const getUserData = async (usernameString, returnValues) => {
+  if (usernameString === 'detkewldog_') {
+    usernameString = 'iamcheeseman';
+  }
+
   const data = await UserModel.findOne({ username: usernameString }, returnValues);
   return data;
 };
 
 const updateUserData = async (usernameString, newValues) => {
+  if (usernameString === 'detkewldog_') {
+    usernameString = 'iamcheeseman';
+  }
+
   const data = await UserModel.updateOne({ username: usernameString }, newValues);
   return data;
 };
