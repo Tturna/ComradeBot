@@ -87,6 +87,15 @@ const giveBits = async (interaction) => {
     return;
   }
 
+  if ((sourceUsername == 'detkewldog' || sourceUsername == 'iamcheeseman') &&
+     (targetUsername == 'iamcheeseman') || targetUsername == 'detkewldog') {
+    await interaction.reply({
+      content: ':middle_finger: :swagnerd:',
+      ephemeral: true
+    });
+    return;
+  }
+
   const amount = interaction.options.getInteger('amount');
   const sourceData = await getUserData(sourceUsername, 'balance');
 

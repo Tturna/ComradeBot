@@ -16,7 +16,6 @@ const blk = ':black_large_square:';
 const arw = ':arrow_down:';
 
 const wheelShifts = 20;
-const finalShifts = 3;
 const finalShiftMul = 3;
 const shiftInterval = 500; // ms
 
@@ -63,6 +62,7 @@ const roulette = async (interaction) => {
   await updateBalance(usernameString, -betAmount);
 
   let msgContent = '';
+  let finalShifts = 2 + Math.round(Math.random() * 3);
   setTimeout(() => {
     for (let i = 0; i < wheelShifts + finalShifts; i++) {
       wheel.shift();
