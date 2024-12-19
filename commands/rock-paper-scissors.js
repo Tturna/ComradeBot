@@ -9,10 +9,10 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('rock-paper-scissors')
     .setDescription('Start a game of rock-paper-scissors.'),
-    //.addMentionableOption(option =>
-    //  option.setName('targetuser')
-    //    .setDescription('Specific user to challenge')
-    //    .setRequired(false)),
+  //.addMentionableOption(option =>
+  //  option.setName('targetuser')
+  //    .setDescription('Specific user to challenge')
+  //    .setRequired(false)),
 
   async execute(interaction) {
     rockPaperScissors(interaction);
