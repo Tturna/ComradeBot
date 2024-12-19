@@ -4,6 +4,11 @@ const { DateTime } = require('luxon');
 // TODO: Consider if the activity bonus should be simpler
 // so this doesn't hit the data base on every message
 const handleActivityIncome = async (message) => {
+  if (message.member == null) {
+    console.log(`A non member "${message.author.username}" sent a message.`);
+    return;
+  }
+
   const nameString = message.member.user.username;
   const nowUnix = DateTime.now().toUnixInteger();
 

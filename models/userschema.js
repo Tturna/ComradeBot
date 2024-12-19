@@ -21,6 +21,10 @@ const userSchema = new Schema({
   lastDailyBonus: {
     type: Number,
     required: false
+  },
+  rpsStreaks: {
+    type: Object,
+    required: false
   }
 }, { timestamps: true });
 
