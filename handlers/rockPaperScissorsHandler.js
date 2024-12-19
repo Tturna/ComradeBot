@@ -1,5 +1,5 @@
 const { ButtonBuilder, ButtonStyle, ActionRowBuilder, ComponentType } = require('discord.js');
-const { getUserData, updateUserData } = require('../handlers/dbHandler.js');
+const { getUserData, updateUserData, getRpsLeaderboard } = require('../handlers/dbHandler.js');
 const roboticsId = '1119326839060570133';
 
 const btnRock = new ButtonBuilder()
@@ -31,6 +31,67 @@ const winMap = {
   'Rock': 'Scissors',
   'Scissors': 'Paper',
   'Paper': 'Rock'
+};
+
+const rpsStreaks = async (interaction) => {
+  const username = interaction.member.user.username;
+
+  const streaksDoc = await getUserData(username, 'rpsStreaks');
+  const hasStreaks = Object.prototype.hasOwnProperty.call(streaksDoc.toObject(), 'rpsStreaks');
+
+  if (!hasStreaks) {
+    await interaction.reply({
+      content: 'You have not played rock-paper-scissors yet!',
+      ephemeral: true
+    });
+
+    await updateUserData(username, {
+      $set: {
+        rpsStreaks: {
+          'rock': 0,
+          'paper': 0,
+          'scissors': 0
+        }
+      }
+    });
+
+    return;
+  }
+
+  const streaks = streaksDoc['rpsStreaks'];
+
+  await interaction.reply({
+    content: `Your current rock-paper-scissors streaks:\n:rock: :${streaks['rock']} :page_facing_up: :${streaks['paper']} :scissors: :${streaks['scissors']}`,
+    ephemeral: interaction.options.getBoolean('hidden')
+  });
+};
+
+const rpsLeaderboard = async (interaction) => {
+  const leaderboard = await getRpsLeaderboard();
+
+  if (leaderboard.length == 0) {
+    await interaction.reply({
+      content: 'No one has played rock-paper-scissors yet!',
+      ephemeral: true
+    });
+
+    return;
+  }
+
+  var leaderboardString = '## Rock-paper-scissors win streak leaderboard:\n';
+
+  leaderboard.forEach((entry, index) => {
+    const username = entry.username;
+    const streaks = entry.rpsStreaks;
+    const totalStreaks = entry.totalStreak;
+
+    leaderboardString += `\`${index + 1}.\`   Total: \`${totalStreaks}\`,   :rock: \`${streaks['rock']}\`,   :page_facing_up: \`${streaks['paper']}\`,   :scissors: \`${streaks['scissors']}\`   -   *${username}*\n`;
+  });
+
+  await interaction.reply({
+    content: leaderboardString,
+    ephemeral: interaction.options.getBoolean('hidden')
+  });
 };
 
 const rockPaperScissors = async (interaction) => {
@@ -264,11 +325,17 @@ const rockPaperScissors = async (interaction) => {
 
     console.log(`${winnerUsername} won rock paper scissors against ${loserUsername}.`);
 
-    const winMultiplier = Math.max(0, Math.log(winnerStreaks[winnerSelection.toLowerCase()] * 3 + 1)) + 1;
-    const winAmount = Math.round(winMultiplier * 5);
+    const winnerStreak = winnerStreaks[winnerSelection.toLowerCase()];
+    const loserStreak = loserStreaks[loserSelection.toLowerCase()];
+    //
+    const winMultiplier = Math.max(0, Math.log(winnerStreak * 3 + 1)) + 1;
+    const bountyBonus = Math.round((loserStreak + 0.5) * (loserStreak + 2) / 5) * 4;
+    const winAmount = Math.round(winMultiplier * 5) + bountyBonus;
+
+    const bountyMessage = bountyBonus > 0 ? ` + ${bountyBonus} bit ★ bounty` : '';
 
     await interaction.editReply({
-      content: `${messageChallenge}\n${messageAccept}\n\n*${playerOneUsername} chose ${playerOneSelection}*\n*${playerTwoUsername} chose ${playerTwoSelection}*\n## ${winnerUsername} won!\n+${winAmount} bits ★ (${winnerStreaks[winnerSelection.toLowerCase()] + 1}x streak multiplier)`,
+      content: `${messageChallenge}\n${messageAccept}\n\n*${playerOneUsername} chose ${playerOneSelection}*\n*${playerTwoUsername} chose ${playerTwoSelection}*\n## ${winnerUsername} won!\n+${winAmount} bits ★ (${winnerStreaks[winnerSelection.toLowerCase()] + 1}x streak${bountyMessage})`,
       components: []
     });
 
@@ -290,4 +357,4 @@ const rockPaperScissors = async (interaction) => {
   });
 };
 
-module.exports = { rockPaperScissors };
+module.exports = { rpsStreaks, rpsLeaderboard, rockPaperScissors };
