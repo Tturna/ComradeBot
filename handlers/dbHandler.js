@@ -38,6 +38,30 @@ const getUserData = async (usernameString, returnValues) => {
   return data;
 };
 
+const getRpsLeaderboard = async () => {
+  const data = await UserModel.find({ rpsStreaks: { $exists: true } }, { username: 1, rpsStreaks: 1 });
+
+  console.log('leaderboard data:');
+  console.log(data);
+
+  var leaderboard = data.map((user) => {
+    return {
+      username: user.username,
+      rpsStreaks: user.rpsStreaks,
+      totalStreak: user.rpsStreaks['rock'] + user.rpsStreaks['paper'] + user.rpsStreaks['scissors']
+    };
+  });
+
+  console.log('leaderboard:');
+  console.log(leaderboard);
+
+  leaderboard.sort((a, b) => {
+    return b.totalStreak - a.totalStreak;
+  });
+
+  return leaderboard;
+};
+
 const updateUserData = async (usernameString, newValues) => {
   if (usernameString === 'detkewldog') {
     usernameString = 'iamcheeseman';
@@ -47,4 +71,4 @@ const updateUserData = async (usernameString, newValues) => {
   return data;
 };
 
-module.exports = { initDb, addUser, userExists, getUserData, updateUserData };
+module.exports = { initDb, addUser, userExists, getUserData, updateUserData, getRpsLeaderboard };

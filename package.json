@@ -7,6 +7,7 @@
   "scripts": {
     "lint": "eslint .",
     "test": "NODE_ENV=test jest",
+    "start": "node bot.js",
     "start:test": "NODE_ENV=test node bot.js",
     "deploy-commands": "node utils/deploy-commands.js"
   },
