@@ -5,8 +5,8 @@ const { DateTime } = require('luxon');
 // so this doesn't hit the data base on every message
 const handleActivityIncome = async (message) => {
   if (message.member == null) {
-      console.log(`A non member "${message.author.username}" sent a message.`);
-      return;
+    console.log(`A non member "${message.author.username}" sent a message.`);
+    return;
   }
 
   const nameString = message.member.user.username;
