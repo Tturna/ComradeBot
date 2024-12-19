@@ -4,6 +4,7 @@ const { handlePinkChee, isChee } = require('./handlers/pinkcheeHandler.js');
 const { initDb } = require('./handlers/dbHandler.js');
 const { handleActivityIncome } = require('./handlers/economyHandler.js');
 const webapp = require('./webapp.js');
+
 require('dotenv').config();
 
 // intents define what kind of data is sent to the bot,

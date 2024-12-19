@@ -3,6 +3,7 @@ const UserModel = require('../models/userschema');
 
 const initDb = async () => {
   try {
+    console.log('Connecting to database...');
     await mongoose.connect(process.env.MONGO_CONN_STRING, { useNewUrlParser: true, useUnifiedTopology: true });
     console.log('Database connection successful.');
   } catch (e) {
